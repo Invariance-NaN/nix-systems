@@ -7,21 +7,23 @@
   };
 
   outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
+  let
+    systemFrom = modules: nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
+      system = "x86_64-linux";
+      inherit modules;
+    };
+  in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
 
-      imports = [ ];
-
       flake = {
-        nixosConfigurations.secondary = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
-          system = "x86_64-linux";
-          modules = [ ./modules/base.nix ./modules/secondary.nix ];
-        };
+        nixosConfigurations.base = systemFrom [ ./modules/base.nix ];
+        nixosConfigurations.secondary = systemFrom [ ./modules/base.nix ./modules/secondary.nix ];
       };
 
       perSystem = { config, pkgs, ... }: {
-        packages.image = self.nixosConfigurations.secondary.config.system.build.digitalOceanImage;
+        packages.image = self.nixosConfigurations.base.config.system.build.digitalOceanImage;
       };
     };
 }
