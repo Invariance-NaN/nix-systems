@@ -10,7 +10,7 @@ in
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
         Type = "simple";
-        ExecStart = ''/my/cool/user/service'';
+        ExecStart = ''echo ${inputs.auth-server.apps.x86_64-linux.default.program}'';
     };
   };
 }

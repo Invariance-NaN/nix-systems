@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    auth-server.url = "github:Invariance-NaN/auth";
   };
 
   outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
